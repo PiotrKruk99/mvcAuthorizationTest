@@ -16,7 +16,7 @@ public class HomeController : Controller
     }
 
     [Route("/secrets")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public IActionResult Secrets()
     {
         return View();
@@ -32,10 +32,12 @@ public class HomeController : Controller
     [HttpPost("/login")]
     public async Task<IActionResult> Login(string login, string password, string returnUrl)
     {
-        if (login.Equals("aaa") && password.Equals("bbb"))
+        if ((login ?? "").Equals("aaa") && (password ?? "").Equals("bbb"))
         {
             var claims = new List<Claim>();
-            claims.Add(new Claim("login", login));
+            claims.Add(new Claim(ClaimTypes.Name, login ?? ""));
+            claims.Add(new Claim("login", login ?? ""));
+            claims.Add(new Claim(ClaimTypes.Role, "admin"));
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             await HttpContext.SignInAsync(claimsPrincipal);
