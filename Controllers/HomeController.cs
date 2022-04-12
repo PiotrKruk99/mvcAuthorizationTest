@@ -16,8 +16,15 @@ public class HomeController : Controller
     }
 
     [Route("/secrets")]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     public IActionResult Secrets()
+    {
+        return View();
+    }
+
+    [Route("/moresecrets")]
+    [Authorize(Roles = "admin")]
+    public IActionResult MoreSecrets()
     {
         return View();
     }
@@ -30,27 +37,29 @@ public class HomeController : Controller
     }
 
     [HttpPost("/login")]
-    public async Task<IActionResult> Login(string login, string password, string returnUrl)
+    public async Task<IActionResult> Login(string login = "", string password = "", string returnUrl = "/")
     {
-        if ((login ?? "").Equals("aaa") && (password ?? "").Equals("bbb"))
+        if ((login.Equals("aaa") && password.Equals("aaa"))
+            || (login.Equals("bbb") && password.Equals("bbb")))
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, login ?? ""));
             claims.Add(new Claim("login", login ?? ""));
-            claims.Add(new Claim(ClaimTypes.Role, "admin"));
+
+            if ((login ?? "").Equals("aaa"))
+                claims.Add(new Claim(ClaimTypes.Role, "admin"));
+
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             await HttpContext.SignInAsync(claimsPrincipal);
 
-            // if ((returnUrl ?? string.Empty).Equals(string.Empty))
-            //     return Redirect("/");
-            // else
-            //     return Redirect(returnUrl);
-            return Redirect(((returnUrl ?? "/").Equals(string.Empty) ? "/" : returnUrl) ?? "/"); //nadmiarowy kod dla wyeliminowania ostrzeżenia
+            //return Redirect(((returnUrl ?? "/").Equals(string.Empty) ? "/" : returnUrl) ?? "/");
+            return Redirect(returnUrl);
         }
         else
         {
             ViewBag.returnUrl = returnUrl ?? string.Empty;
+            ViewBag.returnError = "wrong user name or password";
             return View();
         }
     }
@@ -61,6 +70,12 @@ public class HomeController : Controller
     {
         await HttpContext.SignOutAsync();
         return Redirect("/");
+    }
+
+    [Route("/illegal")]
+    public IActionResult Illegal()
+    {
+        return View();
     }
 
     public IActionResult Privacy()

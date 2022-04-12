@@ -1,12 +1,13 @@
 @{
     ViewData["Title"] = "Login";
 }
+<h1>Login page</h1>
 
-<div class="text-center">
-    <h2 class="display-4">Login page</h2>
-    <form method="post" asp-controller="Home" asp-action="Login">
-        <label>login:</label><input type="text" name="login"><br>
+<form method="post" asp-controller="Home" asp-action="Login">
+    <p>
+        <label>user name:</label><input type="text" name="login"><br>
         <label>password:</label><input type="password" name="password"><br>
-        <button type="submit" name="returnUrl" value="@ViewBag.returnUrl">Zaloguj</button>
-    </form>
-</div>
+        <button type="submit" name="returnUrl" value="@ViewBag.returnUrl">Login</button><br>
+        @ViewBag.returnError
+    </p>
+</form>

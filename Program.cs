@@ -8,7 +8,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 .AddCookie(options => {
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
-                    options.AccessDeniedPath = "/Home/Privacy";
+                    options.AccessDeniedPath = "/illegal";
                 });
 
 var app = builder.Build();
