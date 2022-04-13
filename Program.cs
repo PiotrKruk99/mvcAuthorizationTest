@@ -9,7 +9,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/illegal";
-                    options.ExpireTimeSpan = new TimeSpan(0, 1, 0);
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                    options.Cookie.MaxAge = options.ExpireTimeSpan;
+                    options.SlidingExpiration = true;
                 });
 
 var app = builder.Build();
