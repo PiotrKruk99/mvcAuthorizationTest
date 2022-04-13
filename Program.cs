@@ -9,6 +9,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/illegal";
+                    options.ExpireTimeSpan = new TimeSpan(0, 1, 0);
                 });
 
 var app = builder.Build();
