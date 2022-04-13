@@ -9,9 +9,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/illegal";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
                     options.Cookie.MaxAge = options.ExpireTimeSpan;
                     options.SlidingExpiration = true;
+                    options.Events = new CookieAuthenticationEvents()
+                    {
+                        OnValidatePrincipal = async context =>
+                        {
+                            var expireSpan = options.Cookie.Expiration ?? TimeSpan.FromSeconds(0);
+                            await Task.Run(() => context.Response.Cookies.Append("expireSpan", expireSpan.TotalSeconds.ToString()));
+                            //await Task.CompletedTask;
+                        }
+                    };
                 });
 
 var app = builder.Build();
