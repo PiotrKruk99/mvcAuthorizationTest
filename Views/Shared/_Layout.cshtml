@@ -39,8 +39,8 @@
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home"
-                                asp-action="Logout">Logout</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout
+                                    in <span id="expireSpan"></span> seconds</a>
                             </li>
                         }
                     </ul>
@@ -63,6 +63,23 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        {
+            let expireSpan = document.getElementById("expireSpan");
+            let cookies = document.cookie.split(';');
+            let expireSpanFromCookie = 0;
+
+            for (let i = 0; i < cookies.length; i++) {
+                let s1 = cookies[i].split('=')[0];
+                let s2 = cookies[i].split('=')[1];
+                if (s1.includes('expireSpan', 0))
+                    expireSpanFromCookie = s2;
+            }
+
+            expireSpan.innerHTML = expireSpanFromCookie;
+        }
+    </script>
 </body>
 
 </html>

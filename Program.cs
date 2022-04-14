@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => {
+                .AddCookie(options =>
+                {
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                     options.AccessDeniedPath = "/illegal";
@@ -14,11 +15,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.SlidingExpiration = true;
                     options.Events = new CookieAuthenticationEvents()
                     {
-                        OnValidatePrincipal = async context =>
+                        // OnValidatePrincipal = async context =>
+                        // {
+                        //     // var expireSpan = options.CookieManager.
+                        //     // await Task.Run(() => context.Response.Cookies.Append("expireSpan", expireSpan.TotalSeconds.ToString()));
+                        //     //await Task.CompletedTask;
+                        // },
+                        OnCheckSlidingExpiration = async context =>
                         {
-                            var expireSpan = options.Cookie.Expiration ?? TimeSpan.FromSeconds(0);
+                            var expireSpan = context.RemainingTime;
                             await Task.Run(() => context.Response.Cookies.Append("expireSpan", expireSpan.TotalSeconds.ToString()));
-                            //await Task.CompletedTask;
                         }
                     };
                 });
