@@ -39,8 +39,8 @@
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout
-                                    in <span id="expireSpan"></span> seconds</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">
+                                    <span id="expireSpan"></span></a>
                             </li>
                         }
                     </ul>
@@ -66,24 +66,32 @@
 
     <script>
         {
-            var expireSpan = document.getElementById("expireSpan");
+            var expireSpan = document.getElementById('expireSpan');
             let cookies = document.cookie.split(';');
             let expireSpanFromCookie = 0;
+
             for (let i = 0; i < cookies.length; i++) {
                 let s1 = cookies[i].split('=')[0];
                 let s2 = cookies[i].split('=')[1];
                 if (s1.includes('expireSpan', 0))
                     expireSpanFromCookie = s2;
-                var expireCounter = parseInt(expireSpanFromCookie, 10);
-                if (isNaN(expireCounter)) expireCounter = 0;
-
-                var counter = setInterval(() => {
-                    if (expireCounter > 0) expireCounter = expireCounter - 1;
-                    expireSpan.innerHTML = expireCounter;
-                }, 1000);
             }
 
-            expireSpan.innerHTML = expireSpanFromCookie;
+            var expireCounter = parseInt(expireSpanFromCookie, 10);
+            if (isNaN(expireCounter))
+                expireCounter = 0;
+            expireSpan.innerHTML = 'Logout in ' + expireCounter + ' seconds';
+
+            var counter = setInterval(() => {
+                if (expireCounter > 0) {
+                    expireCounter = expireCounter - 1;
+                    expireSpan.innerHTML = 'Logout in ' + expireCounter + ' seconds';
+                }
+                else {
+                    expireSpan.innerHTML = '';
+                    clearInterval(counter);
+                }
+            }, 1000);
         }
     </script>
 </body>

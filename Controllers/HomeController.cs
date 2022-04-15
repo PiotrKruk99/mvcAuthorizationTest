@@ -43,8 +43,8 @@ public class HomeController : Controller
             || (login.Equals("bbb") && password.Equals("bbb")))
         {
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, login ?? ""));
-            claims.Add(new Claim("login", login ?? ""));
+            claims.Add(new Claim(ClaimTypes.Name, login));
+            claims.Add(new Claim("login", login));
 
             if ((login ?? "").Equals("aaa"))
                 claims.Add(new Claim(ClaimTypes.Role, "admin"));
@@ -53,7 +53,6 @@ public class HomeController : Controller
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             await HttpContext.SignInAsync(claimsPrincipal);
 
-            //return Redirect(((returnUrl ?? "/").Equals(string.Empty) ? "/" : returnUrl) ?? "/");
             return Redirect(returnUrl);
         }
         else
