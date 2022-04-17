@@ -46,7 +46,7 @@ public class HomeController : Controller
             claims.Add(new Claim(ClaimTypes.Name, login));
             claims.Add(new Claim("login", login));
 
-            if ((login ?? "").Equals("aaa"))
+            if ((login).Equals("aaa"))
                 claims.Add(new Claim(ClaimTypes.Role, "admin"));
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
